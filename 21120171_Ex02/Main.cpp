@@ -20,7 +20,7 @@ void menuMain() {
 		cout << endl << "-----------------------" << endl;
 		
 		cout << "OPTIONS:" << endl;
-		cout << "1. Insert" << endl;
+		cout << "1. Input prefix" << endl;
 		cout << "2. Calculate" << endl;
 		cout << "0. Clear" << endl;
 		cout << "Your option (-1 to exit): ";
@@ -33,13 +33,16 @@ void menuMain() {
 			cout << "Tree has been cleared!" << endl;
 			break;
 		case 1:
-			cout << "Insert: ";
-			cin >> x;
+			clear(root);
+			cout << "Input prefix - each operand and operator seperate by 1 blank:\n";
+			cin.ignore();
+			getline(cin, x);
 			insertBinTree(root, x);
 			break;
 		case 2:
 			try {
-				double res = calExpr(root);
+				double res = 0;
+				res = calExpr(root);
 				cout << "Result: " << res << endl;
 			}
 			catch (const exception& e) {

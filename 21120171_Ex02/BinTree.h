@@ -9,6 +9,15 @@
 #include <string>
 using namespace std;
 
+bool isOperand(string x) {
+	return x[0] >= '0' && x[0] <= '9';
+}
+
+bool isOperator(string x) {
+	return x.length() == 1 &&
+		(x[0] == '+' || x[0] == '-' || x[0] == '*' || x[0] == '/');
+}
+
 struct Node {
 	string data;
 	Node* left, * right;
@@ -23,12 +32,20 @@ int numberOfNode(Node* root) {
 	return 1 + numberOfNode(root->left) + numberOfNode(root->right);
 }
 
-Node* insertBinTree(Node*& root, string data) {
-	if (root == nullptr) return root = getNode(data);
-	if (numberOfNode(root->left) <= numberOfNode(root->right))
-		return insertBinTree(root->left, data);
-	else
-		return insertBinTree(root->right, data);
+void insertBinTree(Node*& root, string& prefix) {
+	string temp;
+	int i = 0;
+	for (i = 0; i < prefix.length() && prefix[i] != ' '; i++) {
+		temp += prefix[i];
+	}
+	if (temp.length() <= 0) return;
+	prefix.erase(0, i + 1);
+
+	root = getNode(temp);
+	if (isOperand(temp)) return;
+
+	insertBinTree(root->left, prefix);
+	insertBinTree(root->right, prefix);
 }
 
 void preorder(Node* root) {
@@ -44,15 +61,6 @@ void clear(Node*& root) {
 	clear(root->right);
 	delete root;
 	root = nullptr;
-}
-
-bool isOperand(string x) {
-	return x[0] >= '0' && x[0] <= '9';
-}
-
-bool isOperator(string x) {
-	return x.length() == 1 &&
-		(x[0] == '+' && x[0] == '-' || x[0] == '*' || x[0] == '/');
 }
 
 double calculate(string op, double a, double b) {
